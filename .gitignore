@@ -1,0 +1,8 @@
+
+*.db
+package-lock.json
+node_modules
+start.cmd
+link.url
+uploads/*
+env.js

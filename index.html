@@ -1,0 +1,468 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset = utf-8" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="description" content="Documents MongoDB">
+		<title>Documents MongoDB</title>
+	</head>
+	<body>
+		<div class="progress"><div class="indeterminate"></div></div>
+		<div class="main">
+			<div style="display:flex; padding-top: 10px;">
+				<button type="button" onclick="newFile()" class="waves-effect waves-light btn-small z-depth-2" style="margin: 0 10px;"><i class="bi bi-plus"></i> Новый документ</button>
+				<form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post" style="margin: 0 10px;">
+					<input type="file" name="file" id="upload" onchange="this.form.submit()" style="display:none;" accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword, text/plain"/>
+					<label type="button" for="upload" class="waves-effect waves-light btn-small z-depth-2"><i class="bi bi-upload"></i> Загрузить документ</label>
+				</form>
+			</div><hr/>
+			<div id="documentList"></div>
+		</div>
+		<div class="document" style="display: none">
+			<div class="saved" style="opacity:0; top:-5%;"><i class="bi bi-check-circle"></i> Сохранено</div>
+			<div style="display:flex; padding-top: 10px; justify-content: center;" class="input-field col s6">
+				<input type="text" name="title" id="title" placeholder="Введите название" style="width:400px;">
+				<button style="margin: 0 10px;" onclick="save()" class="waves-effect waves-light btn-small z-depth-2">Сохранить</button>
+				<button style="position: absolute; right: 0" onclick="exit()" class="btn-close z-depth-2" aria-label="Close"></button>
+			</div>
+			<div class="buttons">
+				<div>
+					<button class="toolbar-selectAll button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">select_all</i></button>
+					<button class="toolbar-copy button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">content_copy</i></button>
+					<button class="toolbar-cut button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">content_cut</i></button>
+					<button class="toolbar-delete button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">clear</i></button>
+				</div>
+				<div>					
+					<button class="toolbar-undo button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">undo</i></button>
+					<button class="toolbar-redo button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">redo</i></button>
+				</div>
+				<div style="display:flex">				
+					<form><button class="toolbar-a button waves-effect waves-light btn-small z-depth-2"><i class="large material-icons">insert_link</i></button></form>
+					<form style="padding-left:4px"><button class="toolbar-img button waves-effect waves-light btn-small z-depth-2"><i class="large material-icons">insert_photo</i></button></form>
+					<form style="display:flex; padding-left:4px">
+						<button class="toolbar-table button waves-effect waves-light btn-small z-depth-2"><i class="large material-icons">grid_on</i></button>					
+						<table class="insert-table" style="display:none">
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+							<tr><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td><td><button></button></td></tr>
+						</table>
+					</form>
+				</div>
+			</div>
+			<div class="buttons">
+				<div class="input-field col s12" style="display:flex; height: 32px; margin: 0; flex: 0">
+					<select class="toolbar-font z-depth-2" style="display: block; height: inherit; width: auto; margin-right: 5px;">
+						<option selected="selected" disabled="disabled">Шрифт</option>
+						<option value="arial">Arial</option>
+						<option value="Courier New">Courier New</option>
+						<option value="georgia">Georgia</option>
+						<option value="impact">Impact</option>
+						<option value="roboto">Tahoma</option>
+						<option value="Times New Roman">Times New Roman</option>
+						<option value="verdana">Verdana</option>
+					</select>
+					<select class="toolbar-size z-depth-2" style="display:block; height: inherit; width: auto;">
+						<option selected="selected" disabled="disabled">Размер</option>
+						<option value="1">10px</option>
+						<option value="2">12px</option>
+						<option value="3">14px</option>
+						<option value="4">16px</option>
+						<option value="5">18px</option>
+						<option value="6">21px</option>
+						<option value="7">26px</option>
+					</select>
+				</div>
+				<div>
+					<button class="toolbar-b button waves-effect waves-light btn-small z-depth-2"><b>Ж</b></button>
+					<button class="toolbar-i button waves-effect waves-light btn-small z-depth-2"><i>К</i></button>
+					<button class="toolbar-u button waves-effect waves-light btn-small z-depth-2"><u>Ч</u></button>
+					<button class="toolbar-s button waves-effect waves-light btn-small z-depth-2"><s>abc</s></button>
+					<button class="toolbar-sup button waves-effect waves-light btn-small z-depth-2">x<sup>2</sup></button>
+					<button class="toolbar-sub button waves-effect waves-light btn-small z-depth-2">x<sub>2</sub></button>
+				</div>
+				<div>					
+					<button class="toolbar-left button waves-effect waves-light btn-small z-depth-2"><i class="bi bi-justify-left"></i></button>
+					<button class="toolbar-center button waves-effect waves-light btn-small z-depth-2"><i class="bi bi-text-center"></i></button>
+					<button class="toolbar-right button waves-effect waves-light btn-small z-depth-2"><i class="bi bi-justify-right"></i></button>
+					<button class="toolbar-justify button waves-effect waves-light btn-small z-depth-2"><i class="bi bi-justify"></i></button>
+				</div>
+				<div>
+					<button class="toolbar-ul button waves-effect waves-light btn-small z-depth-2"><i class="bi bi-list-ul"></i></button>
+					<button class="toolbar-ol button waves-effect waves-light btn-small z-depth-2"><i class="bi bi-list-ol"></i></button>
+				</div>
+				<div>
+					<input class="toolbar-color button" id="toolbar-color" type="color" value="#ff0000" style="opacity:0; position:absolute">
+					<label type="color" for="toolbar-color" class="waves-effect waves-light btn-small button z-depth-2"><i class="material-icons" id="format_color_text" style="color:#ff0000">format_color_text</i></label>
+					<input class="toolbar-bg button" id="toolbar-bg" type="color" value="#ffff00" style="opacity:0; position:absolute">
+					<label type="color" for="toolbar-bg" class="waves-effect waves-light btn-small button z-depth-2"><i class="material-icons" id="border_color" style="color:#ffff00">border_color</i></label>
+				</div>
+				<div>					
+					<button class="toolbar-removeFormat button waves-effect waves-light btn-small z-depth-2"><i class="material-icons">format_clear</i></button>
+				</div>
+			</div>
+			<div class="page"><div id="documentText" class="documentText z-depth-5" contenteditable="true" spellcheck="true"></div></div>
+		</div>
+	</body>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+	<script>
+		var socket = io.connect();		
+		var fileID, userID, titleOld;
+		$(document).ready( function() {
+			$( '#uploadForm' ).submit( function() {
+				$( '.progress' ).show();
+				$( this ).ajaxSubmit({
+				});
+				return false;
+			});
+			gen_userID();
+		});
+		function gen_userID(){
+			userID = "";
+			var symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			for (var i = 0; i < 8; i++){
+				userID += symbols.charAt(Math.floor(Math.random() * symbols.length));     
+			}
+			console.log(userID)
+			return userID;
+		}
+		$( '#toolbar-color' ).on('change', function() {
+			$( '#format_color_text' ).attr('style', 'color: ' + $( '#toolbar-color' ).val());
+		});
+		$( '#toolbar-bg' ).on('change', function() {
+			$( '#border_color' ).attr('style', 'color: ' + $( '#toolbar-bg' ).val());
+		});	
+		$( function() {			
+			socket.on( 'update', function( data ){
+				$( '#documentList' ).html( data.list );
+			});
+			socket.on( 'success', function( data ){
+				$( '.progress' ).hide();
+				
+				switch(data.type){
+					case 'save':
+						if(userID != data.userID && fileID == data.fileID){
+							title = data.title;
+							titleOld = title;
+							documentText = data.documentText;
+							$( '#title' ).val( title );
+							$( '#documentText' ).html( documentText );
+						}
+						break;
+					case 'open':
+						if(userID == data.userID){
+							title = data.title;
+							titleOld = title;
+							documentText = data.documentText;
+							fileID = data.fileID;
+							$( '#title' ).val( title );
+							$( '#documentText' ).html( documentText );
+						}
+						break;
+				}
+				
+				//$( '.saved' ).attr( 'style', 'opacity: 0; top:-5%;' );
+			});
+		});
+		function openFile(e){
+			fileID = $( e ).attr( 'id' );
+			socket.emit( 'open', { fileID: fileID, userID: userID });
+			$( '.main' ).hide();
+			$( '.document' ).show();
+			$( '.progress' ).show();
+			$('#documentText').focus();
+		}
+		function deleteFile(e){
+			fileID = $( e ).attr( 'id' );
+			socket.emit( 'delete', { fileID: fileID });
+			$( '.progress' ).show();
+		}
+		function newFile(){
+			socket.emit( 'new' );
+			$( '.main' ).hide();
+			$( '.document' ).show();
+			$( '.progress' ).show();
+			$('#documentText').focus();
+		}
+		socket.on( 'new', function( data ){
+			title = data.title;
+			titleOld = title;
+			documentText = data.documentText;
+			fileID = data.fileID;
+			$( '#title' ).val( title );
+			$( '#documentText' ).html( documentText );
+		});
+		function save()	{
+			title = document.getElementById( 'title' ).value;
+			documentText = document.getElementById( 'documentText' ).innerHTML;
+			socket.emit( 'save', { title: title, titleOld: titleOld, documentText, documentText, fileID: fileID, userID, userID });
+			$( '.progress' ).show();
+			//$( '.saved' ).attr( 'style', 'opacity: 1; top:0;' );
+			//setTimeout(function(){$( '.saved' ).attr( 'style', 'opacity: 0; top:-5%;' );}, 3000);
+		}
+		function exit()	{
+			document.location.href = "/";
+		}
+		$('#documentText').on('input', function() {
+			//save();
+		});
+	</script>
+	
+	
+	<script>		
+		$( 'body' ).on( 'click', '.toolbar-b', function() {
+			document.execCommand( 'bold', false, null);
+			return false;
+		});		
+		$( 'body' ).on( 'click', '.toolbar-i', function() {
+			document.execCommand( 'italic', false, null );
+			return false;
+		});		
+		$( 'body' ).on( 'click', '.toolbar-u', function() {
+			document.execCommand( 'underline', false, null );
+			return false;
+		});		
+		$( 'body' ).on( 'click', '.toolbar-s', function() {
+			document.execCommand( 'strikethrough', false, null );
+			return false;
+		});		
+		$( 'body' ).on( 'click', '.toolbar-sup', function() {
+			document.execCommand( 'superscript', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-sub', function() {
+			document.execCommand( 'subscript', false, null );
+			return false;
+		});		
+		$( 'body' ).on( 'click', '.toolbar-ul', function() {
+			document.execCommand( 'insertUnorderedList', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-ol', function() {
+			document.execCommand( 'insertOrderedList', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-left', function() {
+			document.execCommand( 'justifyLeft', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-center', function() {
+			document.execCommand( 'justifyCenter', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-right', function() {
+			document.execCommand( 'justifyRight', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-justify', function() {
+			document.execCommand( 'justifyFull', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'input', '.toolbar-font', function() {
+			var val = $( this ).val();
+			document.execCommand( 'styleWithCSS', false, true );
+			document.execCommand( 'fontName', false, val );
+			document.execCommand( 'styleWithCSS', false, false );
+		});
+		$( 'body' ).on( 'input', '.toolbar-size', function() {
+			var val = $( this ).val();
+			document.execCommand( 'styleWithCSS', false, true );
+			document.execCommand( 'fontSize', false, val );
+			document.execCommand( 'styleWithCSS', false, false );
+		});
+		$( 'body' ).on( 'input', '.toolbar-color', function() {
+			var val = $( this ).val();
+			document.execCommand( 'styleWithCSS', false, true );
+			document.execCommand( 'foreColor', false, val );
+			document.execCommand( 'styleWithCSS', false, false );
+		});
+		$( 'body' ).on( 'input', '.toolbar-bg', function() {
+			var val = $( this ).val();
+			document.execCommand( 'styleWithCSS', false, true );
+			document.execCommand( 'hiliteColor', false, val );
+			document.execCommand( 'styleWithCSS', false, false );
+		});
+		$( 'body' ).on( 'click', '.toolbar-undo', function() {
+			document.execCommand( 'undo', false, null );
+			return false;
+		});
+		$( 'body' ).on( 'click', '.toolbar-redo', function() {
+			document.execCommand( 'redo', false, null );
+			return false;
+		}); 
+		$('body').on('click', '.toolbar-cut', function(){
+			document.execCommand('cut', false, null);
+			return false;
+		});
+		$('body').on('click', '.toolbar-copy', function(){
+			document.execCommand('copy', false, null);
+			return false;
+		});
+		$('body').on('click', '.toolbar-img', function(){
+			var url = prompt('Введите адрес изображения');
+			if(url != '' && url != null){
+				document.execCommand('insertImage', false, url);
+			}
+			return false;
+		});
+		$('body').on('click', '.toolbar-a', function(){
+			var url = prompt('Введите URL', '');
+			if(url != null){
+				url = (url.startsWith('http://')) ? url : 'http://' + url;
+				document.execCommand('CreateLink', false, url);
+			}
+			return false;
+		});
+		
+		$('body').on('mouseenter', '.toolbar-table', function(){
+			$('.insert-table').show();			
+		});
+		$('body').on('mouseleave', '.toolbar-table', function(){
+			$('.insert-table').hide();			
+		});
+		$('.insert-table td').on( "mouseenter", function(e){
+			$('.insert-table').show();
+			for(let i = 0; i < $(this).parent('tr').index()+1; i++){
+				for(let j = 0; j < $(this).index()+1; j++){
+					$(`.insert-table tr:eq(${i}) td:eq(${j}) button`).attr('style', 'background:rgba(0,0,255,.5)');
+				}
+			}
+		});
+		$('.insert-table td').on( "mouseleave", function(e){
+			$('.insert-table').hide();
+			$('.insert-table td button').attr('style', '');
+		});
+		$('body').on( "click", '.insert-table td', function(e){
+			var table = $('<table id="tab"/>');
+			var columnsCount = $(this).index() + 1;
+			var rowsCount = $(this).parent('tr').index() + 1;			
+			for (var i = 0; i < rowsCount; i++) {
+				var row = $('<tr/>')
+
+				for (var j = 0; j < columnsCount; j++) {
+					var cell = $('<td/>')
+
+					cell.html('')
+					row.append(cell)
+				}
+
+				table.append(row)
+			}
+			document.execCommand('insertHTML', false, table.get(0).outerHTML);
+			return false;
+		});
+		
+		$('body').on('click', '.toolbar-selectAll', function(){
+			document.execCommand('selectAll', false, null);
+			return false;
+		});
+		
+		$('body').on('click', '.toolbar-removeFormat', function(){
+			document.execCommand('removeFormat', false, null);
+			return false;
+		});
+		
+		$('body').on('click', '.toolbar-delete', function(){
+			document.execCommand('delete', false, null);
+			return false;
+		});
+	</script>
+	<style>	
+		html {
+			background: #f8f9fa;
+		}
+		.file {
+			display: flex;
+			justify-content: space-between;
+			margin: 0 10px;
+		}
+		.document {
+			background: #f8f9fa;
+		}
+		.page {
+			width: 100%;
+			height: fit-content;
+		}
+		.documentText {
+			background: #fff;
+			width: 210mm;
+			min-height: 297mm;
+			padding: 2cm 1cm 2cm 2cm;
+			outline: none;
+			margin: 30px auto;
+		}
+		.documentText img {
+			width: 300px;
+		}
+		.button {
+			min-width: 23px;
+		}
+		.saved {
+			position: absolute;
+			color: #fff;
+			background: rgba(0,0,0,0.5);
+			text-align: center;
+			padding: 10px;
+			font-size: 16px;			
+			transition: 0.5s;
+		}
+		.buttons{
+			display: flex;
+			padding: 10px;
+			border-top: #c8c9ca solid 1px;
+		}
+		.buttons div{
+			padding: 0 5px;
+			border-left: 1px solid #808080;
+		}
+		.progress{
+			position: absolute;
+			margin: 0;
+		}
+		.editor {
+			min-height: 150px;
+			border: 1px solid #ddd;
+			padding: 10px;
+			border-radius: 2px;
+			box-shadow: 1px 1px 2px #ddd;
+			background: #fff;
+		}
+		ul {
+			list-style-type: disc!important;
+			padding-left: 40px!important;
+		}
+		ul > li {			
+			list-style-type: disc!important;
+		}
+		table tr td{
+			border: 1px solid #000;
+		}
+		.insert-table {
+			position: absolute;
+			width: auto;
+			background: #fff;
+			z-index: 10;
+			margin-left: 50px;
+		}
+		.insert-table tr td {
+			width: 15px;
+			height: 15px;
+			padding: 0;
+		}
+		.insert-table tr td button {
+			width: 15px;
+			height: 15px;
+			padding: 0;
+		}
+	</style>
+</html>
